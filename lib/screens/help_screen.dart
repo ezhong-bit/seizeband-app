@@ -192,7 +192,7 @@ class _HelpScreenState extends State<HelpScreen> {
                 ListTile(
                   leading: const Icon(Icons.restart_alt),
                   title: const Text('Reset App Data'),
-                  textColor: Colors.black,
+                  textColor: Colors.red,
                   subtitle: const Text('For testing purposes'),
                   onTap: () => _resetAppData(context),
                 ),
