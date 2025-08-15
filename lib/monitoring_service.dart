@@ -91,7 +91,7 @@ Future<void> _pollAudioState() async {
         if (state == "alarm") {
           await _audioHandler?.playUrl('https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/alert_sound.mp3');
         } else if (state == "instruction") {
-          await _audioHandler?.playUrl('https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/audio_instructions.mp3');
+          await _audioHandler?.playUrl('https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/instructions.mp3');
         } else {
           await _audioHandler?.stop();
         }
