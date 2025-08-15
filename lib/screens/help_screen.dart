@@ -109,93 +109,117 @@ class _HelpScreenState extends State<HelpScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Help & Settings')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(
-                'Instructions for connecting your emergency contacts:',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'To make sure your emergency contacts get notified after a seizure detection, please have them follow these steps:',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 12),
-              const Text('1. Download the Telegram app from the App Store or Google Play.'),
-              const SizedBox(height: 6),
-              const Text('2. Search for our bot: @SeizureBandAlertBot'),
-              const SizedBox(height: 6),
-              const Text('3. Open a chat with the bot and click "Start" or send "Hi" to begin.'),
-              const SizedBox(height: 12),
-              const Text(
-                'Make sure your contacts do this so they can get seizure alerts when needed.',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
 
-              TextField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Your Name',
-                  border: OutlineInputBorder(),
+
+
+          // 🔹 Section: User Inputs
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              title: const Text('Account'),
+              trailing: const Icon(Icons.chevron_right),
+              childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              initiallyExpanded: false,
+              children: [
+                TextField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Your Name',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-
-              TextField(
-                controller: _chatIdController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Your Telegram Chat ID',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _chatIdController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Telegram Chat ID',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _saveUserData,
-                child: const Text('Save Name & Chat ID'),
-              ),
-
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () => _resetAppData(context),
-                child: const Text('Reset App Data (for testing)'),
-              ),
-
-              const SizedBox(height: 40),
-              SimpleRoundedButton(
-                icon: Icons.audio_file,
-                label: 'Test audio',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AudioTestScreen(),
-                    ),
-                  );
-                },
-              ),
-
-              SimpleRoundedButton(
-                label: 'Seizure HTTP post test',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SeizureMonitoringScreen(),
-                    ),
-                  );
-                },
-              ),
-
-            ],
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: _saveUserData,
+                  child: const Text('Save Name & Chat ID'),
+                ),
+              ],
+            ),
           ),
-        ),
+
+          // 🔹 Section: Info Header
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              title: const Text('How to Set Up Emergency Contacts'),
+              trailing: const Icon(Icons.expand_more),
+              childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              initiallyExpanded: false,
+              children: const [
+                Text('1. Download the Telegram app from the App Store or Google Play.'),
+                SizedBox(height: 4),
+                Text('2. Search for our bot: @SeizureBandAlertBot'),
+                SizedBox(height: 4),
+                Text('3. Open a chat with the bot and click "Start" or send "Hi" to begin.'),
+                SizedBox(height: 12),
+                Text(
+                  'Make sure your contacts do this so they can get seizure alerts when needed.',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 24),
+
+          // 🔹 Section: Actions
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.restart_alt),
+                  title: const Text('Reset App Data'),
+                  subtitle: const Text('For testing purposes'),
+                  onTap: () => _resetAppData(context),
+                ),
+                const Divider(height: 1),
+                
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.emergency_outlined),
+                  title: const Text('Seizure Alert and Manual Override Test'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SeizureMonitoringScreen()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 30),
+        ],
       ),
+
     );
   }
 }

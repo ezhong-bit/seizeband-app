@@ -105,50 +105,67 @@ Padding(
     )
   ),
 
-//Page 2: Connecting Your Contacts to the Alert System
-Padding(
-  padding: const EdgeInsets.all(16.0),
-  child: SingleChildScrollView(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const SizedBox(height:60),
-        Text('How Alerts Work and Connecting Your Contacts:',
-        style: Theme.of(context).textTheme.titleLarge,),
-        const SizedBox(height:20),
-        Text(
-          'Seize Band is using the Telegram app to message your contacts in the event of a seizure. You also need to download Telegram so we can contact you if needed.\n',
-        style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        Text(
-          'To make sure your emergency contacts get notified after a seizure detection and that you receive messages from our app, please follow these steps:',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 12),
-        Text('1. Download the Telegram app from the App Store or Google Play.', style: Theme.of(context).textTheme.bodyLarge,),
-        const SizedBox(height: 6),
-        Text('2. Search for our bot: @SeizureBandAlertBot', style: Theme.of(context).textTheme.bodyLarge,),
-        const SizedBox(height: 6),
-        Text(
-            '3. Open a chat with the bot and click the "Start" button at the bottom of the page or send a simple message like "Hi" to start receiving alerts.'
-            'The chat bot will give you and your contacts their Telegram Chat ID. Have your contacts send this ID to you. On the next page, there will be an input field for you to provide your Telegram Chat ID.', 
-            style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'Make sure your contacts do this so they can get seizure alerts when needed.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)
-            ),
-
-          Text('\n* To register your contacts on the Seize Band app, head to the emergency contacts page on the homescreen, select "add contact" and input their Telegram Chat ID. *',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)
+// Page 2: Connecting Your Contacts to the Alert System
+LayoutBuilder(
+  builder: (context, constraints) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+        child: IntrinsicHeight(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 60),
+              Text(
+                'How Alerts Work and Connecting Your Contacts:',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Seize Band is using the Telegram app to message your contacts in the event of a seizure. You also need to download Telegram so we can contact you if needed.\n',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              Text(
+                'To make sure your emergency contacts get notified after a seizure detection and that you receive messages from our app, please follow these steps:',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 12),
+              Text('1. Download the Telegram app from the App Store or Google Play.',
+                  style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(height: 6),
+              Text('2. Search for our bot: @SeizureBandAlertBot',
+                  style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(height: 6),
+              Text(
+                '3. Open a chat with the bot and click the "Start" button at the bottom of the page or send a simple message like "Hi" to start receiving alerts.'
+                ' The chat bot will give you and your contacts their Telegram Chat ID. Have your contacts send this ID to you. On the next page, there will be an input field for you to provide your Telegram Chat ID.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Make sure your contacts do this so they can get seizure alerts when needed.',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                '\n* To register your contacts on the Seize Band app, head to the emergency contacts page on the homescreen, select "add contact" and input their Telegram Chat ID. *',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 24),
+            ],
           ),
-          
-      const SizedBox(height: 24),
-    ]
-  )
-)
+        ),
+      ),
+    );
+  },
 ),
+
 
 //Connecting the Seize Band to the app and data collection
 //Data is length and time stamp
