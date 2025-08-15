@@ -4,9 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../widgets/simple_button.dart';
-import '../screens/audio_test_screen.dart';
-
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});
 
@@ -125,7 +122,6 @@ class _HelpScreenState extends State<HelpScreen> {
             child: ExpansionTile(
               tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               title: const Text('Account'),
-              trailing: const Icon(Icons.chevron_right),
               childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               initiallyExpanded: false,
               children: [
@@ -152,6 +148,7 @@ class _HelpScreenState extends State<HelpScreen> {
                 ),
               ],
             ),
+
           ),
 
           // 🔹 Section: Info Header
@@ -164,7 +161,6 @@ class _HelpScreenState extends State<HelpScreen> {
             child: ExpansionTile(
               tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               title: const Text('How to Set Up Emergency Contacts'),
-              trailing: const Icon(Icons.expand_more),
               childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               initiallyExpanded: false,
               children: const [
@@ -181,7 +177,7 @@ class _HelpScreenState extends State<HelpScreen> {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
 
           // 🔹 Section: Actions

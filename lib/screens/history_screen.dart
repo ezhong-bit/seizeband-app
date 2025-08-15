@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seize_appios/widgets/simple_button.dart';
+// import 'package:seize_appios/widgets/simple_button.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:seize_appios/widgets/duration_graph.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,35 +88,34 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 
 
-  Future<List<SeizureTimeData>> _fetchSeizureData() async {
+    Future<List<SeizureTimeData>> _fetchSeizureData() async {
     if (username == null) throw Exception('Username is null');
-    
+
     final url = Uri.parse(
-      'https://1039321b-b048-480a-9cf5-1348f5413d71-00-2sebn6d1aozvp.picard.replit.dev/api/seizure-events/$username'
-    );
+        'https://1039321b-b048-480a-9cf5-1348f5413d71-00-2sebn6d1aozvp.picard.replit.dev/api/seizure-events/$username');
 
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
 
+      Map<String, int> countPerDay = {};
+
       return data.map((event) {
         final timestamp = DateTime.parse(event['timestamp']);
-        return SeizureTimeData(timestamp);
+        final dayKey = DateFormat('MMM d').format(timestamp);
+
+        countPerDay[dayKey] = (countPerDay[dayKey] ?? 0) + 1;
+
+        // Create a unique label per seizure on that day:
+        final label = '$dayKey-${countPerDay[dayKey]}';
+
+        return SeizureTimeData(timestamp, label);
       }).toList();
     } else {
       throw Exception("Failed to load seizure data");
     }
   }
-
-    String _monthShort(int month) {
-    const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return monthNames[month - 1];
-  }
-
 
 /*
   List<SeizureTimeData> _getSeizureData(){
@@ -170,10 +169,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ? const Center(child: Text('No seizure events found.'))
                 : SfCartesianChart(
                     title: ChartTitle(text: 'Seizure Time of Day'),
-                    primaryXAxis: DateTimeAxis(
-                      title: AxisTitle(text: 'Date & Time'),
-                      intervalType: DateTimeIntervalType.hours,
-                      dateFormat: DateFormat('MMM d\nhh:mm a'),
+                    primaryXAxis: CategoryAxis(
+                      title: AxisTitle(text: 'Date'),
+                      labelRotation: 0, // Optional: rotate labels if overlapping
                     ),
                 primaryYAxis: NumericAxis(
                   title: AxisTitle(text: 'Time of Day'),
@@ -187,10 +185,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   },
                 ),
                 tooltipBehavior: _tooltipBehavior,
-                series: <CartesianSeries<SeizureTimeData, DateTime>>[
-                  ScatterSeries<SeizureTimeData, DateTime>(
+                series: <CartesianSeries<SeizureTimeData, String>>[
+                  ScatterSeries<SeizureTimeData, String>(
                     dataSource: seizureData,
-                    xValueMapper: (data, _) => data.timestamp,
+                    xValueMapper: (data, _) => data.label,
                     yValueMapper: (data, _) =>
                         data.timestamp.hour * 60 + data.timestamp.minute,
                     markerSettings: MarkerSettings(
@@ -271,7 +269,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 class SeizureTimeData {
   final DateTime timestamp;
-  int get timeOfDayMinutes => timestamp.hour * 60 + timestamp.minute;
+  final String label;  // unique label for x-axis
 
-  SeizureTimeData(this.timestamp);
+  SeizureTimeData(this.timestamp, this.label);
+
+  int get timeOfDayMinutes => timestamp.hour * 60 + timestamp.minute;
 }
