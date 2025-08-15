@@ -99,17 +99,21 @@ Future<void> _pollAudioState() async {
           await _audioHandler?.playUrl(
               'https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/alert_sound.mp3');
         } else if (newState == "instruction") {
-            _instructionTimer?.cancel();
+          _instructionTimer?.cancel();
 
-            await _audioHandler?.playUrl(
-                'https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/instructions.mp3');
+          // 🚨 Stop alarm audio before playing instruction audio
+          await _audioHandler?.stop();
 
-            // Change timer from 24 seconds to 2 minutes (120 seconds)
-            _instructionTimer = Timer(Duration(minutes: 2), () async {
-              print("⏹️ Instruction audio timeout reached, stopping playback.");
-              await _audioHandler?.stop();
-            });
-          }
+          await _audioHandler?.playUrl(
+            'https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/instructions.mp3',
+          );
+
+          _instructionTimer = Timer(Duration(minutes: 2), () async {
+            print("⏹️ Instruction audio timeout reached, stopping playback.");
+            await _audioHandler?.stop();
+          });
+        }
+
         _lastAudioState = newState;
       } else {
         // State didn't change; do nothing so audio isn't interrupted!
