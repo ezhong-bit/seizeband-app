@@ -83,23 +83,47 @@ class MonitoringService {
   }
 
 Future<void> _pollAudioState() async {
-    try {
-      final url = Uri.parse("https://1039321b-b048-480a-9cf5-1348f5413d71-00-2sebn6d1aozvp.picard.replit.dev/audio-state/$_userName");
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final state = jsonDecode(response.body)["audio_state"];
-        if (state == "alarm") {
-          await _audioHandler?.playUrl('https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/alert_sound.mp3');
-        } else if (state == "instruction") {
-          await _audioHandler?.playUrl('https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/instructions.mp3');
+  try {
+    final url = Uri.parse("https://1039321b-b048-480a-9cf5-1348f5413d71-00-2sebn6d1aozvp.picard.replit.dev/audio-state/$_userName");
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final newState = jsonDecode(response.body)["audio_state"];
+
+      if (newState != _lastAudioState) {
+        print("🔄 Audio state changed: $_lastAudioState ➡️ $newState");
+
+        if (newState == "alarm") {
+          _instructionTimer?.cancel(); // kill any existing timers
+          await _sendLocationToBackend();
+          await _audioHandler?.playUrl(
+              'https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/alert_sound.mp3');
+        } else if (newState == "instruction") {
+          _instructionTimer?.cancel();
+
+          await _audioHandler?.playUrl(
+              'https://raw.githubusercontent.com/ezhong-bit/seizeband-audio-host/main/instructions.mp3');
+
+          // Optionally stop it after 24 seconds:
+          _instructionTimer = Timer(Duration(seconds: 24), () async {
+            print("⏹️ Instruction timeout reached, stopping audio.");
+            await _audioHandler?.stop();
+          });
         } else {
+          // State is "none" or something else
+          _instructionTimer?.cancel();
           await _audioHandler?.stop();
         }
+
+        _lastAudioState = newState;
+      } else {
+        // State didn't change; do nothing so audio isn't interrupted!
       }
-    } catch (e) {
-      print("Polling error: $e");
     }
+  } catch (e) {
+    print("Polling error: $e");
   }
+}
 
  /*       final newState = jsonDecode(response.body)["audio_state"];
 
