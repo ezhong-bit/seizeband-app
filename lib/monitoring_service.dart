@@ -93,7 +93,13 @@ Future<void> _pollAudioState() async {
       if (newState != _lastAudioState) {
         print("🔄 Audio state changed: $_lastAudioState ➡️ $newState");
 
-        if (newState == "alarm") {
+        if (newState == "none") {
+          print("🛑 Received 'none' state from server. Stopping audio.");
+          _instructionTimer?.cancel();
+          await _audioHandler?.stop();
+        }
+
+        else if (newState == "alarm") {
           _instructionTimer?.cancel(); // kill any existing timers
           await _sendLocationToBackend();
           await _audioHandler?.playUrl(
