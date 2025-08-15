@@ -188,13 +188,13 @@ serviceEnabled = await Geolocator.isLocationServiceEnabled();
               ),
               keyboardType: TextInputType.number,
             ),
-
+/*
             const SizedBox(height: 80),
             ElevatedButton(
               onPressed: _sendTestAlert,
               child: const Text('Send Test Seizure Alert'),
             ),
-
+*/
               const SizedBox(height: 30),
 //            const SizedBox(height: 350),
             if (_statusMessage != null)
